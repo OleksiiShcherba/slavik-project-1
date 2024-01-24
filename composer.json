@@ -3,6 +3,7 @@
         "psr-4": { "App\\": "app" }
     },
     "require": {
-        "tecnickcom/tcpdf": "^6.6"
+        "tecnickcom/tcpdf": "^6.6",
+        "symfony/routing": "^6.4"
     }
 }
