@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Services\DB;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserController
 {
-	public function createUser(Request $request){
-		$html = "<!DOCTYPE html>
+    public function createUser(Request $request)
+    {
+        $html = "<!DOCTYPE html>
 		<html>
 		<head>
 		    <title>My Webpage</title>
@@ -21,11 +23,19 @@ class UserController
 		</body>
 		</html>";
 
-		echo($html);
-	}
+        echo ($html);
+    }
 
+    public function newUser(Request $request)
+    {
+        $db = new DB();
+        $save_user = $db->saveUser($request->query->get('username'));
 
-	public function newUser(Request $request){
-		var_dump($request->query->get('username'));
-	}
+        if ($save_user) {
+            echo ("SAVED");
+        } else {
+            echo ("FAILED");
+        }
+
+    }
 }
