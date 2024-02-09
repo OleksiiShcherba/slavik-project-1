@@ -4,35 +4,44 @@ namespace App\Services;
 
 class DB
 {
-    private $servername = "localhost:3307";
-    private $database = "messaging";
-    private $username = "root";
-    private $password = "dev";
+    private static $servername = "localhost:3307";
+    private static $database = "messaging";
+    private static $username = "root";
+    private static $password = "dev";
 
-    public function connect()
+    private static $database_connection;
+
+    protected function __construct()
     {
-        $conn = mysqli_connect($this->servername, $this->username, $this->password, $this->database);
 
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-
-        return $conn;
     }
 
-    public function saveUser(string $username)
+    protected function __clone()
     {
-        $connection = $this->connect();
 
-        $result = $connection->query("INSERT INTO Users (username) VALUES ('" . $username . "');");
+    }
 
-        $last_inserted_id = mysqli_insert_id($connection);
+    protected function __wakeup()
+    {
+        throw new Exception("You cant create DB from json.", 403);
+    }
 
-        $result = $connection->query("SELECT * FROM Users WHERE id = $last_inserted_id");
-        $result = mysqli_fetch_assoc($result);
+    public static function connect()
+    {
+        if (empty(self::$database_connection)) {
+            self::$database_connection = mysqli_connect(self::$servername, self::$username, self::$password, self::$database);
 
-        $connection->close();
+            if (self::$database_connection->connect_error) {
+                die("Connection failed: " . self::$database_connection->connect_error);
+            }
+        }
 
-        return $result;
+        return self::$database_connection;
+    }
+
+    public static function disconnect()
+    {
+        self::$database_connection->close();
+        self::$database_connection = null;
     }
 }

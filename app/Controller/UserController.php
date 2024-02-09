@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Models\User;
 use App\Services\DB;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,7 +18,8 @@ class UserController
         <body>
             <h1>Hello, world! Hello " . $request->query->get('username') . "</h1>
             <form action='http://localhost/new/user'>
-                <input type='text' name='username' />
+                <input type='text' name='main_username' />
+                <input type='text' name='friend_username' />
                 <button type='submit'>Greet me</button>
             </form>
         </body>
@@ -28,14 +30,10 @@ class UserController
 
     public function newUser(Request $request)
     {
-        $db = new DB();
-        $save_user = $db->saveUser($request->query->get('username'));
-        var_dump($save_user);
+        $user = new User();
+        $save_user = $user->saveUser($request->query->get('main_username'));
+        $save_user = $user->saveUser($request->query->get('friend_username'));
 
-        if ($save_user) {
-            echo ("SAVED");
-        } else {
-            echo ("FAILED");
-        }
+        DB::disconnect();
     }
 }
