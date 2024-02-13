@@ -36,4 +36,14 @@ class UserController
 
         DB::disconnect();
     }
+
+    public function getLastUserInfo(): array
+    {
+        $user = new User();
+        $result = $user->getUser();
+
+        header('Content-Type: application/json');
+        echo (json_encode($result));
+        return $result;
+    }
 }

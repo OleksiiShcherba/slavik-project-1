@@ -18,4 +18,20 @@ class User
 
         return $result;
     }
+
+    public function getUser(int $id = null): array
+    {
+        $connection = DB::connect();
+
+        if (empty($id)) {
+            $result = $connection->query("SELECT * FROM Users order by `id` desc LIMIT 1;");
+        } else {
+            $result = $connection->query("SELECT * FROM Users WHERE id = $id");
+
+        }
+
+        $result = mysqli_fetch_assoc($result);
+
+        return $result;
+    }
 }
